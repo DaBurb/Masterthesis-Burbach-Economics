@@ -1,0 +1,18 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Jupyter notebooks
+*.ipynb_checkpoints/
+
+# Raw and processed data
+data/
+data_old/
+results/
+visualization/
+*.csv
+*.xlsx
+
+# Virtual environment
+.env/
+.vscode/
