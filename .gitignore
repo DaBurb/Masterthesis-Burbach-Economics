@@ -4,10 +4,12 @@ __pycache__/
 
 # Jupyter notebooks
 *.ipynb_checkpoints/
+*.ipynb 
 
 # Raw and processed data
 data/
 data_old/
+notebooks/
 results/
 visualization/
 *.csv

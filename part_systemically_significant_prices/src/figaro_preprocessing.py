@@ -3,48 +3,6 @@
 import pandas as pd
 import numpy as np
 
-AGGREGATION_SCHEMES = {
-    "N": ["N77", "N78", "N79", "N80T82"],
-    "Q": ["Q86", "Q87_88"],
-    "R_S": ["R90T92", "R93", "S94", "S95", "S96"],
-}
-
-
-def aggregate_sectors(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Rename and aggregate sectors in both rows and columns using a predefined mapping.
-    This avoids manual slicing and guarantees dimensional alignment.
-    
-    Parameters:
-        df (pd.DataFrame): MultiIndexed DataFrame with (Country, Sector) rows and columns.
-    
-    Returns:
-        pd.DataFrame: Aggregated DataFrame.
-    """
-    aggregation_mapping = {
-        "N77": "N", "N78": "N", "N79": "N", "N80-N82": "N",
-        "Q86": "Q", "Q87_Q88": "Q",
-        "R90-R92": "R_S", "R93": "R_S", "S94": "R_S", "S95": "R_S", "S96": "R_S"
-    }
-
-    # Rename sectors in index
-    new_index = [
-        (country, aggregation_mapping.get(sector, sector)) for country, sector in df.index
-    ]
-    df.index = pd.MultiIndex.from_tuples(new_index, names=["Country", "Sector"])
-
-    # Rename sectors in columns
-    new_columns = [
-        (country, aggregation_mapping.get(sector, sector)) for country, sector in df.columns
-    ]
-    df.columns = pd.MultiIndex.from_tuples(new_columns, names=["Country", "Sector"])
-
-    # Aggregate renamed entries
-    df = df.groupby(level=["Country", "Sector"]).sum()
-    df = df.groupby(level=["Country", "Sector"], axis=1).sum()
-
-    return df
-
 def add_cpi_weights(df: pd.DataFrame) -> pd.DataFrame:
     """
     Calculate and add CPI weight columns per country based on household consumption columns.
