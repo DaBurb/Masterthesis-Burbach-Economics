@@ -3,29 +3,31 @@ import pandas as pd
 
 def calculate_technical_coefficients(Z: pd.DataFrame, X: pd.Series) -> pd.DataFrame:
     """
-    Calculate the technical coefficients matrix A from interindustry flows Z and gross output vector X.
-    Normalizes Z column-wise by X.
+    Calculate the technical coefficients matrix A = Z / X,
+    where each column j is divided by X_j.
     
-    If X_j = 0, sets the corresponding A column to 0.
+    If X_j = 0, the entire column j in A is set to 0.
 
     Parameters:
-        Z (pd.DataFrame): Interindustry flow matrix with MultiIndex on both axes.
-        X (pd.Series): Gross output vector with the same index as Z's columns.
+        Z (pd.DataFrame): Interindustry flow matrix with MultiIndex columns and rows.
+        X (pd.Series): Gross output vector with the same index as Z.columns.
 
     Returns:
-        pd.DataFrame: Technical coefficients matrix A (same shape as Z).
+        pd.DataFrame: Technical coefficients matrix A.
     """
     if not Z.columns.equals(X.index):
-        raise ValueError("Mismatch: Z.columns and X.index must be identical for division.")
+        raise ValueError("Mismatch: Z.columns and X.index must be identical.")
 
-    # Replace 0 in gross output with np.nan to prevent division error
-    X_safe = X.replace(0, np.nan)
+    A = Z.copy()
 
-    # Column-wise division: A_ij = Z_ij / X_j
-    A = Z.div(X_safe, axis=1)
+    for col in Z.columns:
+        x_val = X[col]
+        if x_val == 0 or np.isclose(x_val, 0.0):
+            A[col] = 0.0
+        else:
+            A[col] = Z[col] / x_val
 
-    # After division: if X_j was 0, set entire column in A to 0
-    zero_gross_output = X[X == 0].index
-    A.loc[:, zero_gross_output] = 0
+    # Final cleanup to ensure no NaNs
+    A = A.fillna(0.0)
 
     return A

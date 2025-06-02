@@ -10,7 +10,9 @@ sys.path.append(str(Path(__file__).resolve().parents[2]))
 from config import (
     SYSTEMIC_PRICES_OUTPUTS, SYSTEMIC_PRICES_DATA,
     FIGARO_FULL_MATRIX_DIR, SYSTEMIC_FULL_MATRIX_DIR,
-    SYSTEMIC_Z_MATRIX_DIR, SYSTEMIC_A_MATRIX_DIR, SYSTEMIC_X_VECTOR_DIR, SYSTEMIC_Y_MATRIX_DIR, SYSTEMIC_CPI_WEIGHTS_DIR
+    SYSTEMIC_Z_MATRIX_DIR, SYSTEMIC_A_MATRIX_DIR, SYSTEMIC_X_VECTOR_DIR, SYSTEMIC_Y_MATRIX_DIR, SYSTEMIC_CPI_WEIGHTS_DIR,
+    SYSTEMIC_UNWEIGHTED_IMPACTS_DIR, SYSTEMIC_WEIGHTED_IMPACTS_DIR,
+    EU28_COUNTRIES, IPSEN_REGION_MAP, EU_NORTH_SOUTH_MAP, EU_WEST_EAST_MAP, CLUSTER_REGION_MAP_2019
 )
 
 from shared.data_loader import load_figaro_processed
@@ -18,12 +20,13 @@ from shared.technical_coefficients import (
     calculate_technical_coefficients,
 )
 from shared.aggregation import aggregate_sectors
-from shared.cpi_weights import calculate_cpi_weights
+from shared.cpi_weights import calculate_cpi_weights, new_apply_all_available_cpi_weights
 from shared.extraction import extract_Z_matrix, extract_X_vector, extract_Y_matrix, extract_VA_matrix
 from shared.preprocessing import add_gross_output_row
 from sea_loader import download_sea_file
 from sea_processing import process_sea_ii_volatility
 from analyze_unweighted_shocks import compute_unweighted_shocks
+from visualization import plot_systemic_volatility_scatter
 
 
 
@@ -34,12 +37,12 @@ AGGREGATION_MAPPING_FIGARO_SYSTEMIC = {
     "R90-R92": "R_S", "R93": "R_S", "S94": "R_S", "S95": "R_S", "S96": "R_S"
 }
 
-FINAL_DEMAND_CODES = [
+FINAL_DEMAND_CODES = {
     "P3_S13", "P3_S14", "P3_S15", "P51G", "P5M",
     "P3_S1", "P3_S2", "P3_S3", "P3_S4", "P3_S5",
     "P3_S6", "P3_S7", "P3_S8", "P3_S9", "P3_S10",
     "P3_S11", "P3_S12"
-]
+}
 
 
 def main():
@@ -48,7 +51,7 @@ def main():
     # Step 1: Download and process WIOD SEA volatility data
     download_sea_file()
     sea_vol_df = process_sea_ii_volatility()
-    sea_vol_df.to_csv(SYSTEMIC_PRICES_OUTPUTS / "II_PI_volatility.csv")
+    sea_vol_df.to_csv(SYSTEMIC_PRICES_OUTPUTS / "volatility" / "II_PI_volatility.csv")
 
     # Step 2: Detect available preprocessed FIGARO matrices
     year_files = FIGARO_FULL_MATRIX_DIR.glob("figaro_matrix_*.csv")
@@ -59,42 +62,23 @@ def main():
     if not available_years:
         raise RuntimeError("No processed FIGARO files found.")
 
-    # Step 3: Load all full matrices
+    # Step 4: Load all full matrices
     figaro_data = load_figaro_processed(available_years)
 
     for year in available_years:
         print(f"\n--- Processing FIGARO year: {year} ---")
         df = figaro_data[year]
 
-        # Step 4: Sector aggregation (systemic-specific)
-        aggregated_path = SYSTEMIC_PRICES_DATA / f"figaro_aggregated_{year}.csv"
-        df = aggregate_sectors(df, AGGREGATION_MAPPING_FIGARO_SYSTEMIC, output_path=aggregated_path)
-
-        from shared.preprocessing import add_gross_output_row
+        # Step 5: Sector aggregation (systemic-specific)
+        df = aggregate_sectors(df, AGGREGATION_MAPPING_FIGARO_SYSTEMIC)
 
         # Fix missing MultiIndex level names (due to CSV reload or pandas transformations)
         df.index.names = ["Country", "Sector"]
         df.columns.names = ["Country", "Sector"]
 
-        # Step 5a: Individual country CPI weights
-        df_cpi_weights_individual = calculate_cpi_weights(df)
-        df_cpi_weights_individual.to_csv(SYSTEMIC_CPI_WEIGHTS_DIR / f"cpi_weights_individual_{year}.csv")
-
-        # Step 5b: EU28 region CPI weights
-        EU28_COUNTRIES = {
-            "AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", "FR",
-            "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO",
-            "SE", "SI", "SK", "GB"
-        }
-        region_map_eu28 = {c: "EU28" for c in EU28_COUNTRIES}
-
-        df_cpi_weights_eu28 = calculate_cpi_weights(df, region_map=region_map_eu28)
-        df_cpi_weights_eu28.to_csv(SYSTEMIC_CPI_WEIGHTS_DIR / f"cpi_weights_eu28_{year}.csv")
-
-
         # Make sure df.index is really a MultiIndex with correct names
         if not isinstance(df.index, pd.MultiIndex):
-            print("⚠️ Rebuilding index as MultiIndex manually.")
+            print("Rebuilding index as MultiIndex manually.")
             df.index = pd.MultiIndex.from_tuples(df.index, names=["Country", "Sector"])
 
         df.index.names = ["Country", "Sector"]  # Reinforce
@@ -129,8 +113,47 @@ def main():
         X.to_frame(name="gross_output").to_csv(SYSTEMIC_X_VECTOR_DIR / f"X_{year}.csv")
         Y.to_csv(SYSTEMIC_Y_MATRIX_DIR / f"Y_{year}.csv")
 
-        # Step 9: Calculate unweighted shock impacts
-        compute_unweighted_shocks(A, year)
+        # Step 8b: CPI weights (aggregated sectors)
+        print(f"Calculating CPI weights for {year}...")
+
+        REGION_MAP_EU28 = {c: "EU28" for c in EU28_COUNTRIES}
+
+        calculate_cpi_weights(df, output_path=SYSTEMIC_CPI_WEIGHTS_DIR / "individual", filename=f"cpi_weights_individual_{year}.csv")
+        calculate_cpi_weights(df, region_map=REGION_MAP_EU28, output_path=SYSTEMIC_CPI_WEIGHTS_DIR / "eu28", filename=f"cpi_weights_eu28_{year}.csv")
+        calculate_cpi_weights(df, region_map=IPSEN_REGION_MAP, output_path=SYSTEMIC_CPI_WEIGHTS_DIR / "ipsen", filename=f"cpi_weights_ipsen_{year}.csv")
+        calculate_cpi_weights(df, region_map=EU_NORTH_SOUTH_MAP, output_path=SYSTEMIC_CPI_WEIGHTS_DIR / "north_south", filename=f"cpi_weights_north_south_{year}.csv")
+        calculate_cpi_weights(df, region_map=EU_WEST_EAST_MAP, output_path=SYSTEMIC_CPI_WEIGHTS_DIR / "west_east", filename=f"cpi_weights_west_east_{year}.csv")
+        calculate_cpi_weights(df, region_map=CLUSTER_REGION_MAP_2019, output_path=SYSTEMIC_CPI_WEIGHTS_DIR / "cluster", filename=f"cpi_weights_cluster_{year}.csv")
+
+
+        # Step 9: Calculate unweighted shock impacts (only if not yet saved)
+        unweighted_path = SYSTEMIC_UNWEIGHTED_IMPACTS_DIR / f"unweighted_shock_impacts_{year}.csv"
+
+        if unweighted_path.exists():
+            print(f"Skipping unweighted shocks for {year} (already exists).")
+        else:
+            print(f"Calculating unweighted shocks for {year} ...")
+            compute_unweighted_shocks(A, year)
+
+        # Step 10: Apply CPI weights to compute weighted impacts
+        WEIGHT_SCENARIOS = {
+            "individual": SYSTEMIC_CPI_WEIGHTS_DIR / "individual" / f"cpi_weights_individual_{year}.csv",
+            "eu28": SYSTEMIC_CPI_WEIGHTS_DIR / "eu28" / f"cpi_weights_eu28_{year}.csv",
+            "ipsen": SYSTEMIC_CPI_WEIGHTS_DIR / "ipsen" / f"cpi_weights_ipsen_{year}.csv",
+            "north_south": SYSTEMIC_CPI_WEIGHTS_DIR / "north_south" / f"cpi_weights_north_south_{year}.csv",
+            "west_east": SYSTEMIC_CPI_WEIGHTS_DIR / "west_east" / f"cpi_weights_west_east_{year}.csv",
+            "cluster": SYSTEMIC_CPI_WEIGHTS_DIR / "cluster" / f"cpi_weights_cluster_{year}.csv"
+        }
+
+        new_apply_all_available_cpi_weights(
+            year=year,
+            unweighted_impacts_path=SYSTEMIC_UNWEIGHTED_IMPACTS_DIR / f"unweighted_shock_impacts_{year}.csv",
+            price_volatility_path=SYSTEMIC_PRICES_OUTPUTS / "volatility" / "II_PI_volatility.csv",
+            cpi_weights_root=SYSTEMIC_CPI_WEIGHTS_DIR,
+            output_dir=SYSTEMIC_WEIGHTED_IMPACTS_DIR,
+            output_prefix="weighted_impacts"
+        )
+
 
     print("\n=== All FIGARO years processed successfully ===")
 

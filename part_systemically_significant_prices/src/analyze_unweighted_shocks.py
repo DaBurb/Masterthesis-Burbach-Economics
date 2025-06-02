@@ -11,14 +11,13 @@ from scipy.linalg import lu_factor, lu_solve
 
 from config import (
     SYSTEMIC_PRICES_OUTPUTS,
-    FIGARO_A_MATRIX_DIR,
     SYSTEMIC_UNWEIGHTED_IMPACTS_DIR,
 )
 
 def compute_unweighted_shocks(A: pd.DataFrame, year: int):
     
     # Load price volatility
-    vol_path = SYSTEMIC_PRICES_OUTPUTS / "II_PI_volatility.csv"
+    vol_path = SYSTEMIC_PRICES_OUTPUTS / "volatility" / "II_PI_volatility.csv"
     price_vol = pd.read_csv(vol_path, index_col=[0, 1])
 
     impacts = []
@@ -55,11 +54,10 @@ def compute_unweighted_shocks(A: pd.DataFrame, year: int):
             (A.columns.get_level_values("Sector") == exog_sector)
         )
 
-        A_XE = A.loc[row_mask, exog_col_mask].T  # Transpose to match A'
+        # Extract the exogenous input vector without summing or transposing
+        A_XE = A.loc[row_mask, exog_col_mask]  # shape: (n_endogenous, 1)
 
-        # Ensure correct matrix shapes
-        A_XE = A_XE.sum(axis=0).values.reshape(-1, 1)
-
+        A_XE = A.loc[(exog_country, exog_sector), col_mask].values.reshape(-1, 1)
 
         I = np.eye(A_EE.shape[0])
 
