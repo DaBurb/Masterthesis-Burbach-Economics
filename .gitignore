@@ -1,20 +1,32 @@
-# Byte-compiled / cache
+# Python cache and bytecode
 __pycache__/
 *.py[cod]
 
-# Jupyter notebooks
-*.ipynb_checkpoints/
-*.ipynb 
+# Jupyter notebooks (checkpoints only — keep notebooks in repo)
+*.ipynb_checkpoints
 
-# Raw and processed data
+# Ignore all large or intermediate data
 data/
 data_old/
-notebooks/
 results/
+outputs/
 visualization/
+notebooks/
+part_gas_price_shock/notebooks
+part_systemically_significant_prices/notebooks
+
+# Ignore file types you don’t want on GitHub
 *.csv
 *.xlsx
+*.pdf
+*.zip
+*.png
+*.json
 
-# Virtual environment
-.env/
+# IDE/editor settings
 .vscode/
+.env/
+.venv/
+
+# Temp or auto-generated files
+tempCodeRunnerFile.py

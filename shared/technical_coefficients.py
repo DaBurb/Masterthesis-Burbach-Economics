@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 
+
+
+
 def calculate_technical_coefficients(Z: pd.DataFrame, X: pd.Series) -> pd.DataFrame:
     """
     Calculate the technical coefficients matrix A = Z / X,
