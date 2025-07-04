@@ -39,9 +39,6 @@ AGGREGATION_MAPPING_FIGARO_SYSTEMIC = {
 
 FINAL_DEMAND_CODES = {
     "P3_S13", "P3_S14", "P3_S15", "P51G", "P5M",
-    "P3_S1", "P3_S2", "P3_S3", "P3_S4", "P3_S5",
-    "P3_S6", "P3_S7", "P3_S8", "P3_S9", "P3_S10",
-    "P3_S11", "P3_S12"
 }
 
 
