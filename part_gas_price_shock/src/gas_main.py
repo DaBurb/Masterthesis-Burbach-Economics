@@ -112,7 +112,7 @@ results_extra = run_imported_gas_shock(
     eu28_countries=EU28_COUNTRIES,
     shock_factor=5.0,
     intra_eu=False,
-    output_path=GAS_PRICE_SHOCK_OUTPUTS / "results_extra_2021.csv",
+    output_path=GAS_PRICE_SHOCK_OUTPUTS / "including_domestic" / "results_extra_2021.csv",
     debug=True
 )
 
@@ -121,7 +121,7 @@ results_intra_extra = run_imported_gas_shock(
     eu28_countries=EU28_COUNTRIES,
     shock_factor=5.0,
     intra_eu=True,
-    output_path=GAS_PRICE_SHOCK_OUTPUTS / "results_intra_extra_2021.csv",
+    output_path=GAS_PRICE_SHOCK_OUTPUTS / "including_domestic" / "results_intra_extra_2021.csv",
     debug=True
 )
 
@@ -130,7 +130,7 @@ df_e, df_f, df_i = simulate_extra_vs_full_gas_shock(
     A_matrix=A_weighted,
     eu28_countries=EU28_COUNTRIES,
     shock_factor=5.0,
-    output_dir=GAS_PRICE_SHOCK_OUTPUTS / "extra_vs_full_2021"
+    output_dir=GAS_PRICE_SHOCK_OUTPUTS / "excluding_domestic"
 )
 
 print("Gas price shock analysis completed.")
@@ -185,38 +185,38 @@ print(f"CPI weights for EU28 saved to {eu28_output_dir}")
 # === Apply EU28 CPI weights ===
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "extra_vs_full_2021" / "results_extra.csv",
+    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "excluding_domestic" / "results_extra.csv",
     cpi_weights_path=GAS_PRICE_SHOCK_DATA / "cpi_weights" / "eu28" / "cpi_weights_eu28_2021.csv",
     regions=["EU28", "ROW"],
     output_path=GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" / "extra_cpi_applied_total_impact_eu28.csv"
 )
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "extra_vs_full_2021" / "results_full.csv",
+    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "excluding_domestic" / "results_full.csv",
     cpi_weights_path=GAS_PRICE_SHOCK_DATA / "cpi_weights" / "eu28" / "cpi_weights_eu28_2021.csv",
     regions=["EU28", "ROW"],
     output_path=GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" / "full_cpi_applied_total_impact_eu28.csv"
 )
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "extra_vs_full_2021" / "results_intra.csv",
+    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "excluding_domestic" / "results_intra.csv",
     cpi_weights_path=GAS_PRICE_SHOCK_DATA / "cpi_weights" / "eu28" / "cpi_weights_eu28_2021.csv",
     regions=["EU28", "ROW"],
     output_path=GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" / "intra_cpi_applied_total_impact_eu28.csv"
 )
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "results_extra_2021.csv",
+    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "including_domestic" / "results_extra_2021.csv",
     cpi_weights_path=GAS_PRICE_SHOCK_DATA / "cpi_weights" / "eu28" / "cpi_weights_eu28_2021.csv",
     regions=["EU28","ROW"],
-    output_path=GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" / "cpi_applied_total_impact_eu28_extra.csv"
+    output_path=GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" / "including_domestic_total_impact_eu28_extra.csv"
 )
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "results_intra_extra_2021.csv",
+    price_change_path=GAS_PRICE_SHOCK_OUTPUTS / "including_domestic" / "results_intra_extra_2021.csv",
     cpi_weights_path=GAS_PRICE_SHOCK_DATA / "cpi_weights" / "eu28" / "cpi_weights_eu28_2021.csv",
     regions=["EU28", "ROW"],
-    output_path=GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" / "cpi_applied_total_impact_eu28_intra_extra.csv"
+    output_path=GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" / "including_domestic_total_impact_eu28_intra_extra.csv"
 )
 
 
@@ -252,7 +252,7 @@ per_country_list = [col for col in cpi_cols if not col.startswith('Unnamed:')]
 YEAR = 2021  # Define the year for output filenames
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / "extra_vs_full_2021"/ f"results_extra.csv",
+    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / "excluding_domestic"/ f"results_extra.csv",
     cpi_weights_path  = cpi_file,
     regions           = per_country_list,
     output_path       = GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" /
@@ -260,7 +260,7 @@ apply_cpi_weights_to_gas_price_shock(
 )
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / "extra_vs_full_2021"/ f"results_full.csv",
+    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / "excluding_domestic"/ f"results_full.csv",
     cpi_weights_path  = cpi_file,
     regions           = per_country_list,
     output_path       = GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" /
@@ -268,7 +268,7 @@ apply_cpi_weights_to_gas_price_shock(
 )
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / "extra_vs_full_2021"/ f"results_intra.csv",
+    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / "excluding_domestic"/ f"results_intra.csv",
     cpi_weights_path  = cpi_file,
     regions           = per_country_list,
     output_path       = GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" /
@@ -276,7 +276,7 @@ apply_cpi_weights_to_gas_price_shock(
 )
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / f"results_extra_{YEAR}.csv",
+    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / "including_domestic" / f"results_extra_{YEAR}.csv",
     cpi_weights_path  = cpi_file,
     regions           = per_country_list,
     output_path       = GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" /
@@ -284,7 +284,7 @@ apply_cpi_weights_to_gas_price_shock(
 )
 
 apply_cpi_weights_to_gas_price_shock(
-    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / f"results_intra_extra_{YEAR}.csv",
+    price_change_path = GAS_PRICE_SHOCK_OUTPUTS / "including_domestic" / f"results_intra_extra_{YEAR}.csv",
     cpi_weights_path  = cpi_file,
     regions           = per_country_list,
     output_path       = GAS_PRICE_SHOCK_OUTPUTS / "weighted_impacts" /
