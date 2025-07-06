@@ -69,10 +69,73 @@ Each part saves outputs in a dedicated folder:
 
 ## Reproducibility
 
-To reproduce results:
-1. Run `shared_main.py` to prepare the base data.
-2. Run `systemic_main.py` or `gas_main.py` depending on the analysis.
-3. Output files and plots are stored under `/output`.
+To fully reproduce the results and analyses in this repository, follow these steps:
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/DaBurb/Masterthesis-Burbach-Economics
+cd Masterthesis-Burbach-Economics
+```
+
+
+### 2. Install Dependencies
+
+Ensure you have Python 3.10+ installed, then create a virtual environment and install the required packages:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+pip install -r requirements.txt
+```
+
+
+### 3. Download and Process Data
+
+Run the shared preprocessing script to download and process the FIGARO data:
+
+```bash
+python shared/shared_main.py
+```
+
+This will create the necessary preprocessed matrices in the `shared/data/figaro/processed/` directory.
+
+
+### 4. Run Analytical Parts
+
+To run the analyses, execute the main scripts for each part:
+
+```bash
+# For Systemically Significant Prices
+python part_systemically_significant_prices/src/systemic_main.py
+# For Gas Price Shock Analysis
+python part_gas_price_shock/src/gas_main.py
+```
+
+
+### 5. Visualize Results
+
+To visualize the results, navigate to the respective visualization directories and run the Jupyter notebooks:
+
+```bash
+cd part_systemically_significant_prices/visualizations
+jupyter lab
+```
+
+```bash
+cd part_gas_price_shock/visualizations
+jupyter lab
+```
+
+
+## Visualizations
+
+The project includes Jupyter notebooks for visualizing the results of both analyses. These notebooks provide interactive exploration of the data and insights derived from the input-output models.
+
+
+
+
+
 
 ## Visualizaitons of Results
 
