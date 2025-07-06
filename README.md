@@ -7,7 +7,7 @@ The approach is rooted in a Post-Keynesian perspective, which bridges the gap be
 1. **Which sectors are systemically significant for inflation transmission in the EU?**
 2. **How did imported gas price shocks contribute to inflation across EU countries and sectors post-2021?**
 
-Analyses are based mainly on **Eurostat FIGARO Input-Output Tables**, accompanied by **World Input Output Database (WIOD) (price data)**, more accurately its complementary dataset called **Socioeconomic Accounts (SEA)**, and **EXIOBASE3** (disaggregation of natural gas extraction and mining and quarrying sector).
+Analyses are based mainly on **Eurostat FIGARO Input-Output Tables**, accompanied by **World Input Output Database (WIOD)**, more accurately its complementary dataset called **Socioeconomic Accounts (SEA)** for its producer price data, and **EXIOBASE3** (disaggregation of natural gas extraction and mining and quarrying sector).
 
 ---
 
