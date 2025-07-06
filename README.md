@@ -113,26 +113,6 @@ python part_gas_price_shock/src/gas_main.py
 ```
 
 
-### 5. Visualize Results
-
-To visualize the results, navigate to the respective visualization directories and run the Jupyter notebooks:
-
-```bash
-cd part_systemically_significant_prices/visualizations
-jupyter lab
-```
-
-```bash
-cd part_gas_price_shock/visualizations
-jupyter lab
-```
-
-
-## Visualizations
-
-The project includes Jupyter notebooks for visualizing the results of both analyses. These notebooks provide interactive exploration of the data and insights derived from the input-output models.
-
-
 
 
 
