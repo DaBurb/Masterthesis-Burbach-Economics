@@ -202,6 +202,12 @@ Then open `visualization.ipynb` and execute the cells.
 
 ---
 
+## Disclaimer: Use of Generative AI
+
+Generative AI assissted in increasing efficiency and annotating this source-code.
+
+---
+
 ## Citation
 
 This repository accompanies the master's thesis:
