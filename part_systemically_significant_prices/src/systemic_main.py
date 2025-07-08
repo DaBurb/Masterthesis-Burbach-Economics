@@ -26,7 +26,6 @@ from shared.preprocessing import add_gross_output_row
 from sea_loader import download_sea_file
 from sea_processing import process_sea_ii_volatility
 from analyze_unweighted_shocks import compute_unweighted_shocks
-from visualization import plot_systemic_volatility_scatter
 
 
 
