@@ -203,9 +203,9 @@ Then open `visualization.ipynb` and execute the cells.
 
 ## Data Sources
 
-> Eurostat FIGARO input–output tables ([link](https://ec.europa.eu/eurostat/web/esa-supply-use-input-tables)) © Eurostat, licensed under the European Union Open Data Portal License.
-> EXIOBASE v3 multi-regional input–output database ([link](https://www.exiobase.eu/)).
-> WIOD SEA data ([link](https://www.rug.nl/ggdc/valuechain/wiod/)).
+- Eurostat FIGARO input–output tables ([link](https://ec.europa.eu/eurostat/web/esa-supply-use-input-tables)) © Eurostat, licensed under the European Union Open Data Portal License.
+- EXIOBASE v3 multi-regional input–output database ([link](https://www.exiobase.eu/)).
+- WIOD SEA data ([link](https://www.rug.nl/ggdc/valuechain/wiod/)).
 
 ---
 
