@@ -199,6 +199,33 @@ jupyter lab
 
 Then open `visualization.ipynb` and execute the cells.
 
+---
+
+## Methodological Tools & Software
+
+This project uses several open-source Python packages that play a central role in the analysis:
+
+### `python-louvain`
+Community detection is performed using the Louvain algorithm implemented in:
+
+> **Aynaud, T.** (2020). *python-louvain 0.16: Louvain algorithm for community detection*.  
+> Available at: [https://github.com/taynaud/python-louvain](https://github.com/taynaud/python-louvain)  
+> Based on:  
+> Blondel, V.D., Guillaume, J.L., Lambiotte, R., & Lefebvre, E. (2008). *Fast unfolding of communities in large networks*. *Journal of Statistical Mechanics: Theory and Experiment*, 2008(10), P10008. [https://doi.org/10.1088/1742-5468/2008/10/P10008](https://doi.org/10.1088/1742-5468/2008/10/P10008)
+
+### `pymrio`
+Used for handling and analyzing multi-regional input–output (MRIO) data:
+
+> **Stadler, K.** (2021). *Pymrio – A Python-Based Multi-Regional Input–Output Analysis Toolbox*.  
+> *Journal of Open Research Software*, 9(1), 8. [https://doi.org/10.5334/jors.251](https://doi.org/10.5334/jors.251)
+
+### `networkx`
+Used for network construction, structural metrics, and propagation analysis:
+
+> **Hagberg, A.A., Schult, D.A., & Swart, P.J.** (2008). *Exploring network structure, dynamics, and function using NetworkX*.  
+> In *Proceedings of the 7th Python in Science Conference (SciPy2008)*, pp. 11–15.  
+> [https://conference.scipy.org/proceedings/scipy2008/paper_2/](https://conference.scipy.org/proceedings/scipy2008/paper_2/)
+
 
 ---
 
