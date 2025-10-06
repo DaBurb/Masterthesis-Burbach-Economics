@@ -1,4 +1,4 @@
-# From Sectoral Price Shocks to Overall Inflation: Insights from an Input-Output Perspective
+# From Sectoral Price Shocks to Overall Inflation: Insights from an Input-Output Framework
 
 This repository contains the complete codebase and data processing pipeline for the master's thesis of Daniel Leo Burbach (2025). The thesis investigates how sector specific shocks propagate throughout the economy and impact overall inflation, specifically for the EU28. The use of a modified Leontief price model, an input-output framework, allows for a detailed analysis of the transmission mechanisms of price shocks across different sectors and countries.
 
