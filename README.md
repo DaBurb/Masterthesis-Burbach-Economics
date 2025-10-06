@@ -247,4 +247,4 @@ This repository accompanies the master's thesis:
 *Master’s Thesis, M.A. Arbeit, Wirtschaft, Gesellschaft – Ökonomische und Soziologische Studien*,  
 University of Hamburg
 
-If you use this code or results in your own work, please cite the thesis appropriately.
+If you use this code or results in your own work, please cite the thesis appropriately. This repository corresponds to the final version used for the Master’s thesis submitted at University of Hamburg, 2025. The archived version ensures reproducibility of all analyses and results presented in the thesis.
